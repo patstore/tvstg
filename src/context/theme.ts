@@ -1,0 +1,19 @@
+/** @jsxImportSource octane */
+import { createContext, useContext } from 'octane';
+
+export type Theme = 'light' | 'dark';
+
+interface ThemeContextValue {
+	theme: Theme;
+	toggleTheme: () => void;
+}
+
+export const ThemeContext = createContext<ThemeContextValue | null>(null);
+
+export function useTheme(): ThemeContextValue {
+	const context = useContext(ThemeContext);
+	if (!context) {
+		throw new Error('useTheme must be used within ThemeProvider');
+	}
+	return context;
+}

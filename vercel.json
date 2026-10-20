@@ -1,0 +1,5 @@
+{
+	"$schema": "https://openapi.vercel.sh/vercel.json",
+	"installCommand": "printf '\\n//npm.pkg.github.com/:_authToken=%s\\n' \"$GITHUB_AUTH_TOKEN\" >> .npmrc && npm install",
+	"rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
+}

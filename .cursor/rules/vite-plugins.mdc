@@ -1,0 +1,64 @@
+---
+description: Vite plugin authoring for this project
+globs: "plugins/**"
+alwaysApply: false
+---
+
+# Vite Plugin Conventions
+
+## Location and registration
+
+- Plugins live in `plugins/` at project root (not inside `src/`)
+- Register in `vite.config.ts` in order: **`octanePagesPlugin()` → `patStorePlugin()` → `octane()`**
+- Pass `loadEnv(mode, root, '')` into the PatStore plugin so `PATSTORE_MASTER_KEY` is available
+
+## Octane pages plugin (`plugins/octane-pages/`)
+
+Scans `src/pages/` and writes `src/pages/.generated/` (`routes.ts`, `PageRouter.tsrx`).
+
+- Runs on `buildStart` and watches `src/pages/**/*.tsrx` in dev (full reload on change)
+- `npm run generate:pages` — standalone codegen (also `pretypecheck`)
+- Supports TanStack Start-style paths, `(lang)/` optional locale prefix, `$param` dynamics
+- Each page file gets a unique import alias to avoid export-name collisions
+
+Do not edit generated files. See **octane-pages** cursor rule for authoring pages.
+
+## PatStore plugin (`patstore-plugin.ts`)
+
+**Client validation** — `configResolved` checks `VITE_PATSTORE_*` vars.
+
+**SSG fetch** — `buildStart` runs on `vite dev` and `vite build`:
+
+1. `plugins/patstore/ssg-fetcher.ts` — Module discovery + GraphQL collections + incremental asset sync
+2. Writes `data/build-time-data.json`, `data/access.ts`, `data/index.ts`
+3. Downloads file fields into project-root `asset/` (served at `/asset/*`)
+4. **Incremental sync** — compares `updatedAt` with existing `build-time-data.json`; reuses unchanged records/assets, removes deleted records/collections, prunes orphaned files
+4. Uses `PATSTORE_MASTER_KEY` (or `VITE_PATSTORE_REST_KEY`) — never bundled
+5. Reuses PatStore module field selection for GraphQL selections
+6. Failures warn by default; set `strictSsg: true` to fail the build
+
+**Runtime fallback** — `fetchPatStoreCollection()` from `@patstore/core` reads `@data` when static data exists.
+
+## Flags
+
+- `VITE_PATSTORE_SSG=false` — skip build-time fetch
+- `VITE_PATSTORE_USE_STATIC=false` — force runtime GraphQL in the browser
+- `VITE_PATSTORE_DOWNLOAD_ASSETS=false` — skip file downloads (keep remote URLs)
+
+## Creating a new plugin
+
+```ts
+export function myPlugin(options = {}): Plugin {
+  return {
+    name: 'vite-plugin-my-feature',
+    configResolved(config) { /* validate env */ },
+    async buildStart() { /* optional SSG / codegen */ },
+  };
+}
+```
+
+## Env vars
+
+- Client: `VITE_*` prefix
+- Build-only: `PATSTORE_MASTER_KEY` (no `VITE_` — not exposed to browser)
+- Document all vars in `.env.example`

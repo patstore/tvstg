@@ -1,0 +1,64 @@
+.clip {
+	display: inline-grid;
+	overflow: hidden;
+	vertical-align: bottom;
+}
+
+.layer {
+	grid-area: 1 / 1;
+	transition: transform var(--text-flip-duration, 0.6s) var(--text-flip-ease, cubic-bezier(0.165, 0.84, 0.44, 1));
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.layer {
+		transition: none;
+	}
+}
+
+.up .next {
+	transform: translateY(100%);
+}
+
+.down .next {
+	transform: translateY(-100%);
+}
+
+.left .next {
+	transform: translateX(100%);
+}
+
+.right .next {
+	transform: translateX(-100%);
+}
+
+.swapped.up .current {
+	transform: translateY(-100%);
+}
+
+.swapped.up .next {
+	transform: none;
+}
+
+.swapped.down .current {
+	transform: translateY(100%);
+}
+
+.swapped.down .next {
+	transform: none;
+}
+
+.swapped.left .current {
+	transform: translateX(-100%);
+}
+
+.swapped.left .next {
+	transform: none;
+}
+
+.swapped.right .current {
+	transform: translateX(100%);
+}
+
+.swapped.right .next {
+	transform: none;
+}

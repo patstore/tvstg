@@ -1,0 +1,63 @@
+---
+description: TSRX component and Octane hook conventions
+globs: "**/*.tsrx"
+alwaysApply: false
+---
+
+# TSRX / Octane Components
+
+## Component shape
+
+```tsrx
+import { useState } from 'octane';
+
+export function MyComponent(props: { title: string }) @{
+  const [open, setOpen] = useState(false);
+
+  <section class="my-component">
+    <h2>{props.title as string}</h2>
+    @if (open) {
+      <p>Expanded</p>
+    }
+  </section>
+}
+```
+
+## Rules
+
+- Use `@{ ... }` body shorthand; one JSX root per component — **no `return` inside `@{}`**
+- Dynamic text: `{expr as string}` when type is not provably string
+- Control flow: `@if`, `@for (item of list; key item.id)`, `@try` / `@pending` / `@catch`
+- Use `class`, not `className`; native events (`onClick`, `onInput`) — no synthetic `onChange` on text inputs
+- Refs are props: `ref={myRef}`
+
+## Hooks in `.ts` modules
+
+Custom hooks shared across components go in `.ts` files with the Octane ownership pragma:
+
+```ts
+/** @jsxImportSource octane */
+import { useState } from 'octane';
+```
+
+## Pages vs components
+
+- **Pages** (`src/pages/`) — file-based routes; add a lowercase `.tsrx` file to create a route (see **octane-pages** rule)
+- **Components** (`src/components/`) — reusable UI
+- **UI fields** (`src/ui/ContentFields/`) — CMS `Section` / `Field` / `ImageField` / etc.
+- **Context** (`src/context/`) — theme; avoid putting CMS fetch logic here
+
+## Async CMS data in TSRX
+
+Wrap PatStore hooks in `@try` / `@pending` / `@catch` — see `src/content/Home/components/CmsArticles.tsrx`:
+
+```tsrx
+@try {
+  const items = usePatStoreCollection('Article', { limit: 6 });
+  <ul>...</ul>
+} @pending {
+  <p>Loading…</p>
+} @catch (_e) {
+  <p>Could not load content.</p>
+}
+```

@@ -1,0 +1,12 @@
+dist
+node_modules
+octane-temp
+src/pages/.generated
+**/*.d.tsrx.ts
+data/build-time-data.json
+data/cms-manifest.json
+data/cms-content.json
+data/cms-content-data.ts
+data/access.ts
+package-lock.json
+asset

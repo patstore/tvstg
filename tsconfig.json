@@ -1,0 +1,42 @@
+{
+  "compilerOptions": {
+    "plugins": [{"name":"@tsrx/typescript-plugin"}],
+    "jsx": "react-jsx",
+    "jsxImportSource": "octane",
+    "target": "es2023",
+    "module": "esnext",
+    "lib": ["ES2023", "DOM"],
+    "types": ["vite/client"],
+    "allowArbitraryExtensions": true,
+    "skipLibCheck": true,
+
+    /* Bundler mode */
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "verbatimModuleSyntax": true,
+    "moduleDetection": "force",
+    "noEmit": true,
+
+    /* Linting */
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "erasableSyntaxOnly": true,
+    "noFallthroughCasesInSwitch": true,
+    "paths": {
+      "@data": ["./data/index.ts"],
+      "@data/*": ["./data/*"],
+      "@animations": ["./src/animations/index.ts"],
+      "@cms-content": ["./data/cms-content-data.ts"],
+      "@cms": ["./data/types/index.ts"],
+      "@provider": ["./src/provider/index.ts"],
+      "@context": ["./src/context/index.ts"],
+      "@ui": ["./src/ui/index.ts"],
+      "@content": ["./src/content/index.ts"],
+      "@types": ["./src/types/index.ts"],
+      "@components": ["./src/components/index.ts"],
+      "@pages/*": ["./src/pages/*"]
+    }
+  },
+  "include": ["src", "data"],
+  "exclude": ["node_modules", "dist", "vite.config.ts"]
+}

@@ -1,0 +1,20 @@
+---
+description: Vite plugin authoring for this project
+globs: "**/patstore-kit/**"
+alwaysApply: false
+---
+
+# PatStore Kit (external monorepo)
+
+PatStore plugin and CMS runtime live in **`../patstore-kit`** — not in this repo.
+
+| Package | Path |
+|---------|------|
+| `@patstore/core` | `patstore-kit/packages/core` |
+| `@patstore/vite-plugin` | `patstore-kit/packages/vite-plugin` |
+
+Sites consume via `file:../patstore-kit/...` (local) or GitHub Packages (published).
+
+After changing the kit: `cd patstore-kit && npx pnpm build`, then reinstall in the site if needed.
+
+See `patstore-kit/docs/PUBLISHING.md` for GitHub Packages setup.

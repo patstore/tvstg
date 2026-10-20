@@ -1,0 +1,16 @@
+{
+	"useTabs": true,
+	"tabWidth": 2,
+	"singleQuote": true,
+	"printWidth": 100,
+	"endOfLine": "lf",
+	"plugins": ["@tsrx/prettier-plugin"],
+	"overrides": [
+		{
+			"files": ["*.tsrx"],
+			"options": {
+				"parser": "tsrx"
+			}
+		}
+	]
+}

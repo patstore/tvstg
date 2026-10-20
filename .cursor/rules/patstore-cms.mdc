@@ -1,0 +1,48 @@
+---
+description: PatStore CMS data layer — planner, resources, and component consumption
+globs: "src/provider/content/**,src/ui/ContentFields/**"
+alwaysApply: false
+---
+
+# PatStore CMS Data Layer
+
+## Architecture (strict layer order)
+
+```
+QuerySpec → QueryPlanner → ExecutionPlan → ResourceManager → CacheResource → usePatStoreData()
+```
+
+| Layer | File | Responsibility |
+|-------|------|------------------|
+| Query Planner | `planner/query-planner.ts` | Module metadata + spec → agnostic plan |
+| Execution Plan | `planner/execution-plan.ts` | Plan helpers; **no Promises** in plan types |
+| Resource Manager | `resources/resource-manager.ts` | Execute steps; materialize deferred resources |
+| Cache Resource | `resources/cache-resource.ts` | Dedupe by plan key |
+| Hook | `hooks/usePatStoreData.ts` | Component-local `use()` consumption |
+
+## Data access rules
+
+- **No global store** — components call `usePatStoreData`, `usePatStoreCollection`, or `usePatStoreObject` with a `QuerySpec`
+- **Module-driven** — field selection comes from PatStore `Module` records via `module-registry.ts`
+- **Collection keys** — `{ClassName}` → `{className}s` (e.g. `Article` → `articles`)
+- **ExecutionPlan steps**: `load-modules` → `graphql-find` | `graphql-get` → optional `resolve-files`
+
+## QuerySpec
+
+```ts
+{ className: 'Article', mode: 'find', limit: 10, where?: {...} }
+{ className: 'Article', mode: 'get', objectId: 'abc123' }
+```
+
+## Client auth
+
+- Browser requests use `X-Parse-Client-Key` (`VITE_PATSTORE_CLIENT_KEY`)
+- Read config via `readPatStoreEnv()` from `@patstore/core` — never hardcode credentials
+- File URLs resolved through `VITE_PATSTORE_FILE_URL` in `resolveFileUrl()`
+
+## Extending the layer
+
+- New step kinds → add to `ExecutionStep` in `types.ts`, handle in `resource-manager.ts`, compile in `query-planner.ts`
+- New field types → extend `planner/field-selection.ts`
+- Do not fetch PatStore directly from pages/components — go through the hook stack or `fetchPatStoreCollection` / `fetchPatStoreObject` / `fetchPatStoreData`
+- Promise-based fetching (`fetch-patstore.ts`) supports `source: 'static' | 'dynamic'` — default static when SSG data exists; same Promise shape for both

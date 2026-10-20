@@ -1,0 +1,62 @@
+{
+	"name": "patstore-starter",
+	"private": true,
+	"version": "1.0.0",
+	"type": "module",
+	"engines": {
+		"node": ">=22"
+	},
+	"scripts": {
+		"dev": "vite",
+		"build": "vite build",
+		"preview": "vite preview",
+		"typecheck": "tsrx-tsc --noEmit -p tsconfig.json",
+		"generate:pages": "node --experimental-strip-types scripts/generate-pages.ts",
+		"generate:cms-content": "node --experimental-strip-types scripts/generate-cms-content.ts",
+		"generate:component": "node --experimental-strip-types scripts/generate-component.ts",
+		"pretypecheck": "npm run generate:pages && npm run generate:cms-content",
+		"lint": "eslint src",
+		"format": "prettier --write .",
+		"format:check": "prettier --check .",
+		"analyze": "octane analyze",
+		"doctor": "octane doctor",
+		"knip": "knip"
+	},
+	"devDependencies": {
+		"@eslint/js": "^10.0.1",
+		"@octanejs/cli": "^0.0.1",
+		"@octanejs/vite-plugin": "^0.4.1",
+		"@tsrx/eslint-parser": "^0.6.3",
+		"@tsrx/eslint-plugin": "^0.6.3",
+		"@tsrx/prettier-plugin": "^0.6.3",
+		"@tsrx/typescript-plugin": "^0.6.3",
+		"@types/lodash.debounce": "^4.0.9",
+		"@types/node": "^26.6.5",
+		"eslint": "^10.13.0",
+		"eslint-config-prettier": "^10.1.8",
+		"eslint-plugin-prettier": "^5.5.7",
+		"globals": "^17.13.0",
+		"knip": "^6.41.0",
+		"prettier": "^3.9.10",
+		"typescript": "^5.9.3",
+		"typescript-eslint": "^8.72.0",
+		"vite": "^8.3.4"
+	},
+	"dependencies": {
+		"@octanejs/lucide": "^0.1.59",
+		"@octanejs/usehooks-ts": "^0.0.46",
+		"@patstore/cms-content-plugin": "^0.4.5",
+		"@patstore/core": "^0.4.4",
+		"@patstore/octane-pages-plugin": "^0.4.0",
+		"@patstore/vite-plugin": "^0.4.0",
+		"@tsrx/oxc": "^0.21.0",
+		"graphql": "^17.0.2",
+		"graphql-request": "^7.4.0",
+		"gsap": "^3.15.0",
+		"lenis": "^1.3.27",
+		"octane": "^0.13.8",
+		"sass": "^1.105.2",
+		"split-type": "^0.3.4",
+		"zod": "^4.6.7"
+	}
+}

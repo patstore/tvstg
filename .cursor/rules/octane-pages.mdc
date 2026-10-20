@@ -1,0 +1,78 @@
+---
+description: File-based routing in src/pages (TanStack Start conventions)
+globs: "src/pages/**"
+alwaysApply: false
+---
+
+# File-Based Pages (`src/pages/`)
+
+Routes are **not registered manually**. The `octane-pages` Vite plugin scans `src/pages/` at dev/build time and generates:
+
+- `src/pages/.generated/routes.ts` — `matchRoute()`, path matching
+- `src/pages/.generated/PageRouter.tsrx` — renders the active page or `404.tsrx`
+
+Run `npm run generate:pages` after clone (also runs before `typecheck`). Generated output is gitignored.
+
+## File naming (TanStack Start style)
+
+All route **filenames and folder names must be lowercase**.
+
+| File | URL |
+| --- | --- |
+| `index.tsrx` | `/` |
+| `about.tsrx` | `/about` |
+| `posts/index.tsrx` | `/posts` |
+| `posts/$post_id.tsrx` | `/posts/:post_id` |
+| `docs/$.tsrx` | `/docs/*` (splat → `params._splat`) |
+| `404.tsrx` | Not a route — global not-found page |
+
+- **`index`** — index route for the parent path
+- **`$param`** — dynamic segment (available as `matchRoute(path)?.params.param`)
+- **`[segment]`** — literal segment (escape special names)
+- Files/folders starting with `_` or `.` are ignored
+
+## Optional language prefix — `(lang)/`
+
+Place pages inside `(lang)/` to match **with and without** a language prefix:
+
+| File | URLs | `params.lang` |
+| --- | --- | --- |
+| `(lang)/artikel.tsrx` | `/artikel`, `/de/artikel`, `/en/artikel` | set only on prefixed URL |
+
+For a **required** prefix only, use `$lang/artikel.tsrx` → `/de/artikel`, `/en/artikel` (no unprefixed URL).
+
+## Wiring
+
+```
+RouterContext (path, navigate)
+    ↓
+PageContent → PageRouter (.generated)
+    ↓
+matchRoute(path) → page component or 404.tsrx
+```
+
+- Internal links: `useRouter().navigate('/about')` — no full reloads
+- Route params: `import { matchRoute } from '../.generated/routes.ts'`
+- Document language: `RouterContext` sets `document.documentElement.lang` via `resolveRouteLanguage()` (`params.lang` or `DEFAULT_LANG` from `.env`)
+- Every page receives a **`language` prop** from `PageRouter` — type as `PageProps` from `src/pages/types.ts`
+
+## Page file rules (TSRX)
+
+- One exported page component per file; use a **unique export name** per file (codegen aliases by file path, but duplicate names are confusing)
+- Use `@{ ... }` with a **single JSX root** — never `return <Component />` inside `@{}`
+- Accept `PageProps` (`language: string`) on exported page components — passed by generated `PageRouter`
+- Async data with `use(promise)` requires a `<Suspense>` boundary (see `src/pages/articles/$article_id.tsrx`)
+- Compose shared UI from `src/components/`; keep pages thin
+
+## Do
+
+- Add new routes by creating lowercase `.tsrx` files under `src/pages/`
+- Prefer `(lang)/` for localized URLs that also work without a prefix
+- Check `match.id` or specific `params` when a component could be ambiguous across routes
+
+## Don't
+
+- Edit `src/pages/.generated/` by hand
+- Hardcode route registries or template switches
+- Use uppercase filenames (`About.tsrx` → use `about.tsrx`)
+- Put `404.tsrx` on a URL path — it is only the fallback component

@@ -1,0 +1,56 @@
+---
+description: Core Octane + Vite project context and conventions
+alwaysApply: true
+---
+
+# Octane Starter — Project Context
+
+## Stack
+
+- **Octane** (TSRX) — UI framework; components in `.tsrx`, boot in `src/main.ts`
+- **Vite 8** — bundler; Octane via `octane/compiler/vite` in `vite.config.ts`
+- **PatStore CMS** — `@patstore/core` for data; page fields in `src/ui/ContentFields/`; content fetch in `src/provider/content/`
+- **GSAP** — page transitions (`src/provider/router/RouterContext.tsrx`) and `src/animations/`
+- **Lenis** — smooth scroll (single instance via `createLenis()` in `main.ts`)
+- **SCSS** — `src/styles/`; import `main.scss` from `main.ts` only
+- **Icons** — `@octanejs/lucide` (not `lucide-react`)
+- **Hooks** — `@octanejs/usehooks-ts` for Octane-compatible utilities
+
+## Requirements
+
+- Node.js **22+**
+- Typecheck with `tsrx-tsc`, not plain `tsc`
+- Run `npm run doctor` after Octane/Vite config changes
+
+## Structure
+
+```
+src/App.tsrx              → root providers
+src/pages/                → file-based routes (scanned by octane-pages plugin)
+src/pages/.generated/     → auto-generated PageRouter + matchRoute (do not edit)
+src/components/           → layout, header, shared UI
+src/content/              → page content composed from CMS fields
+src/context/              → ThemeContext
+src/provider/             → router + CMS page-content loading
+src/ui/                   → Image + ContentFields (Section, Field, ImageField, …)
+src/animations/           → AnimateText, AnimateLine, AnimateContent
+plugins/octane-pages/     → file-based routing Vite plugin
+```
+
+File-based routing uses TanStack Start naming in `src/pages/` — see rule **octane-pages** for `(lang)/`, `$param`, and `404.tsrx` conventions.
+
+`@cms` is generated PatStore record types (`data/types/index.ts`), not the runtime data layer. Import hooks and fetchers from `@patstore/core`, field components from `@ui`, and page-content helpers from `@provider`.
+
+## Do
+
+- Keep diffs minimal; match existing naming and import style (`.ts` extensions in imports)
+- Use client-side routing via `RouterContext` — no full-page reloads for internal links
+- Guard CMS UI with `isPatStoreConfigured()` before calling PatStore hooks
+- Add `optimizeDeps.needsInterop` when a dependency fails with missing default export (e.g. `lodash.debounce`)
+
+## Don't
+
+- Add React, React Router, or global state stores (Zustand/Redux) unless explicitly requested
+- Import `lucide-react` or plain `usehooks-ts` — use `@octanejs/*` bindings
+- Commit `.env` or expose `VITE_PATSTORE_REST_KEY` in client-only code paths
+- Use plain `tsc` for typecheck scripts

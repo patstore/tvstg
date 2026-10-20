@@ -1,0 +1,44 @@
+---
+description: SCSS, theming, GSAP, and Lenis conventions
+globs: "src/styles/**"
+alwaysApply: false
+---
+
+# Styling and Motion
+
+## SCSS
+
+- Entry: `src/styles/main.scss` → `@use 'variables'` + `@use 'layout'`
+- Theme tokens on `:root[data-theme='light'|'dark']` — toggle via `ThemeContext` (`document.documentElement.dataset.theme`)
+- Use CSS variables (`var(--text)`, `var(--accent)`) in components; avoid hardcoded colors
+- Component classes: BEM-ish (`site-header`, `site-nav__link`, `content-card`)
+
+## Theming
+
+- Consume theme with `useTheme()` from `src/context/ThemeContext.tsrx`
+- Persist preference in `localStorage` key `theme`
+
+## Page transitions
+
+- Route changes go through the memoized `navigate()` in `RouterContext`
+- The outgoing page is a ghost clone of `.page-content` (class `page-content--exiting`) with a dark overlay; the incoming page slides in over it
+- `prefers-reduced-motion` skips the clone and swaps the route immediately
+- Do not add competing route animation logic in pages
+
+## Lenis
+
+- Shared options, the document instance, `createHorizontalLenis`, and `startLenisLoop` live in `src/lenis.ts`
+- `startLenisLoop()` is called once from `src/main.ts` and drives every active instance
+- The document instance ignores `.scroll-wrapper`; horizontal panels use `ScrollWrapper`
+- Viewport-triggered animations subscribe to the document Lenis `scroll` event in `src/animations/`
+
+## Entrance animations
+
+- Import `AnimateText`, `AnimateLine`, and `AnimateContent` from `@animations`
+- Omit `trigger` to play on mount; pass `viewport` (0–1) to play when the element travels through the viewport
+- Respect `prefers-reduced-motion` — already handled inside the animation components
+
+## GSAP elsewhere
+
+- Import `gsap` directly; prefer transforms/opacity for performance
+- Respect `prefers-reduced-motion` when adding new animations
