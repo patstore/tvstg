@@ -7,5 +7,5 @@ export {
   isStaticDataReady,
 } from './access.ts';
 export type { BuildTimeData, BuildTimeMeta, DownloadedFile } from './build-time-types.ts';
-export type { PatstoreDownload, PatstoreCategory, PatstoreImage, PatstoreArticle, PatstoreWebpage, PatstoreUser, PatstoreForm, PatstoreRecord } from './types/index.ts';
+export type { PatstoreImage, PatstoreWebpage, PatstoreCategory, PatstoreAppointment, PatstoreLocation, PatstoreForm, PatstoreDownload, PatstoreGroup, PatstorePerson, PatstoreArticle, PatstoreEntry, PatstoreRecord } from './types/index.ts';
 export { default as buildTimeData } from './build-time-data.json';

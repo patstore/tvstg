@@ -1,6 +1,6 @@
 import { Home } from '@content';
-import type { PageProps } from '@types';
+import type { PageProps } from '../types.ts';
 
-export function IndexPage(_props: PageProps) @{
-	<Home language="en" />
+export function IndexPage(props: PageProps) @{
+	<Home language={props.language} />
 }

@@ -1,6 +1,7 @@
 import { useRouter } from '@provider';
 import { PageRouter } from '@pages/.generated/PageRouter.tsrx';
-import { Header } from '@components';
+import { Footer } from '../Footer/index.ts';
+import { Header } from '../Header/index.ts';
 
 export function Layout() @{
 	const { contentRef } = useRouter();
@@ -12,5 +13,6 @@ export function Layout() @{
 				<PageRouter />
 			</div>
 		</main>
+		<Footer />
 	</div>
 }

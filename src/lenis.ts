@@ -30,7 +30,7 @@ export function trackLenis(instance: Lenis) {
 /** Vertical document scroller. Stopped while a horizontal `ScrollWrapper` is mounted. */
 export const lenis = new Lenis({
 	...lenisOptions,
-	prevent: (node) => node.closest('.scroll-wrapper') != null,
+	prevent: (node) => node.closest('.scroll-wrapper, .club-slide') != null,
 });
 
 trackLenis(lenis);

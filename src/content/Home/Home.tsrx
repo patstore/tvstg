@@ -1,114 +1,61 @@
-import { useMemo } from 'octane';
-import { fetchPatStoreCollection, isPatStoreConfigured } from '@patstore/core';
-import {
-	CollectionField,
-	Field,
-	ImageField,
-	LinkField,
-	Section,
-	RichTextField,
-	DownloadField,
-} from '@ui';
-import { AnimateContent, AnimateLine, AnimateText } from '@animations';
-import { CmsArticlesCopy, CmsArticles, CmsSection } from './components/index.ts';
+import { isPatStoreConfigured } from '@patstore/core';
+import { Seo, Sidebar } from '@components';
+import { publishedArticles, useArticles, useCategories, useImages } from '@provider';
+import { BlogElement, Sponsors, SportBanner } from '@ui';
+import shopTeaser from '../../assets/shop-teaser.jpg';
 
-interface ArticleRecord {
-	objectId: string;
-	title?: { value?: string };
-	label?: { value?: string };
+export function Home(props: { language: string }) @{
+	<>
+		<Seo
+			data={{
+				title: 'TV Freiburg St. Georgen',
+				description: 'Willkommen beim TV Freiburg St. Georgen von 1897 e.V.',
+				language: props.language,
+			}}
+		/>
+		@if (!isPatStoreConfigured()) {
+			<p class="club-status">PatStore ist nicht konfiguriert.</p>
+		} @else {
+			<HomeContent />
+		}
+	</>
 }
 
-export function Home(_props: { language: string }) @{
-	const articlesPromise = useMemo(
-		() => fetchPatStoreCollection<ArticleRecord>('Article', { limit: 6 }),
-		[],
-	);
+function HomeContent() @{
+	@try {
+		const articles = publishedArticles(useArticles()).slice(0, 5);
+		const images = useImages();
+		const categories = useCategories();
 
-	<Section id="page" label="Seite">
-		<section class="page">
-			<Section id="hero" label="Hero">
-				<header class="page-header">
-					<p class="page-eyebrow">
-						<AnimateText delay={0.1} duration={0.6}>
-							<Field id="eyebrow" label="Hero Eyebrow">Welcome</Field>
-						</AnimateText>
-					</p>
-					<h1 class="page-title">
-						<AnimateText delay={0.2} duration={0.7}>
-							<Field id="title" label="Hero Title">Home (default)</Field>
-						</AnimateText>
-					</h1>
-					<p class="page-lede">
-						<AnimateText delay={0.35} duration={0.7}>
-							<Field id="lede" label="Hero Description">
-								A minimal Octane + Vite starter with routing, theming, and page transitions.
-							</Field>
-						</AnimateText>
-					</p>
-					<AnimateLine
-						length={48}
-						direction="left-to-right"
-						delay={0.5}
-						duration={0.6}
-					/>
-					<LinkField id="cta-1" label="Hero Call To Action" href="/about" class="btn">
-						Learn more
-					</LinkField>
-				</header>
-			</Section>
-
-			<Section id="body" label="Body">
-				<article class="page-body">
-					@if (isPatStoreConfigured()) {
-						<CmsArticlesCopy articles={articlesPromise} />
-					} @else {
-						<CmsSection />
-					}
-
-					<CmsArticles />
-
-					<Section id="content-card" label="Content Card">
-						<AnimateContent viewport={0.2} duration={0.7}>
-							<div class="content-card">
-								<h2>
-									<Field id="title" label="Content Card Title">Included</Field>
-								</h2>
-								<ul>
-									<CollectionField id="collection" label="Content Card List">
-										<li>
-											<Field id="item" label="Content Card Item">Octane components in TSRX</Field>
-										</li>
-									</CollectionField>
-								</ul>
-							</div>
-						</AnimateContent>
-					</Section>
-
-					<Section id="article">
-						<article>
-							<h2>
-								<Field id="title" label="Article Title">Article Title</Field>
-							</h2>
-							<ImageField
-								id="image"
-								label="Article Image"
-								src="https://via.placeholder.com/150"
-								alt="Article Image"
-							/>
-							<RichTextField id="content" label="Article Content">
-								<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos.</p>
-							</RichTextField>
-							<DownloadField
-								id="download"
-								label="Article Download"
-								href="https://via.placeholder.co/150"
-								displayFileName
-							>Lade das PDF herunter</DownloadField>
-						</article>
-						<LinkField id="link" href="https://react.dev">Learn more</LinkField>
-					</Section>
-				</article>
-			</Section>
-		</section>
-	</Section>
+		<div>
+			<div class="club-page">
+				<div class="club-split">
+					<div class="club-main">
+						<div class="club-grid">
+							@for (const article of articles; key article.objectId) {
+								<BlogElement
+									article={article}
+									images={images}
+									categories={categories}
+									feature={article.objectId === articles[0]?.objectId}
+								/>
+							}
+						</div>
+						<a class="club-shop" href="https://tvstg.fan12.de" target="_blank" rel="noreferrer">
+							<img src={shopTeaser} alt="TV Freiburg St. Georgen Onlineshop" />
+						</a>
+					</div>
+					<Sidebar category="1cU4dGw1Mu" showCalendar showNews displayAllNews displayAllEvents />
+				</div>
+				<Sponsors />
+			</div>
+			<div class="club-page">
+				<SportBanner />
+			</div>
+		</div>
+	} @pending {
+		<p class="club-status">Startseite wird geladen…</p>
+	} @catch (_error) {
+		<p class="club-status">Startseite konnte nicht geladen werden.</p>
+	}
 }

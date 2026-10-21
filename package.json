@@ -1,7 +1,7 @@
 {
 	"name": "patstore-starter",
 	"private": true,
-	"version": "1.0.0",
+	"version": "0.2.0",
 	"type": "module",
 	"engines": {
 		"node": ">=22"
@@ -44,12 +44,14 @@
 	},
 	"dependencies": {
 		"@octanejs/lucide": "^0.1.59",
+		"@octanejs/motion": "^0.1.65",
 		"@octanejs/usehooks-ts": "^0.0.46",
 		"@patstore/cms-content-plugin": "^0.4.5",
-		"@patstore/core": "^0.4.4",
+		"@patstore/core": "^0.4.8",
 		"@patstore/octane-pages-plugin": "^0.4.0",
-		"@patstore/vite-plugin": "^0.4.0",
+		"@patstore/vite-plugin": "^0.4.6",
 		"@tsrx/oxc": "^0.21.0",
+		"fuse.js": "^7.5.0",
 		"graphql": "^17.0.2",
 		"graphql-request": "^7.4.0",
 		"gsap": "^3.15.0",
