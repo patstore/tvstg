@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'octane';
+import { Building2, Clock } from '@octanejs/lucide';
 import { isPatStoreConfigured } from '@patstore/core';
 import { getWeekday, idList, mediaUrl, trainingSlots, useImagesFor, usePersonsFor } from '@provider';
 import type { SiteRecord, Trainingszeit } from '@types';
@@ -7,6 +8,7 @@ import placeholder from '../../assets/training-placeholder.png';
 import { ContactPerson } from '../ContactPerson/index.ts';
 import { Html } from '../Html/index.ts';
 import { Label } from '../Label/index.ts';
+import { Loading } from '../Loading/index.ts';
 import { SwitchButton } from '../SwitchButton/index.ts';
 import { useTrainingTimes } from './useTrainingTimes.ts';
 
@@ -124,7 +126,7 @@ function SportCalendarData(props: { categories: string[]; keywords: string[] }) 
 			<PanelHost />
 		</div>
 	} @pending {
-		<p class="club-status">Trainingszeiten werden geladen…</p>
+		<Loading />
 	} @catch (_error) {
 		<p class="club-status">Trainingszeiten konnten nicht geladen werden.</p>
 	}
@@ -208,13 +210,21 @@ function DayRow(props: {
 			</td>
 			<td>
 				<div>
-					<p>{(props.slot.start + (props.slot.end ? ' – ' + props.slot.end : '')) as string}</p>
+					<p class="club-meta">
+						<Clock size={16} />
+						<span>{(props.slot.start + (props.slot.end ? ' – ' + props.slot.end : '')) as string}</span>
+					</p>
 					@if (props.slot.text) {
 						<p>{props.slot.text as string}</p>
 					}
 				</div>
 			</td>
-			<td>{(props.slot.location || '') as string}</td>
+			<td>
+				<p class="club-meta">
+					<Building2 size={16} />
+					<span>{(props.slot.location || '') as string}</span>
+				</p>
+			</td>
 			<td>
 				<div>
 					@if (ageLabel(props.group)) {
@@ -254,13 +264,17 @@ function TrainingCard(props: {
 					}
 				</div>
 				<h4>{(props.group.title || '') as string}</h4>
-				<p>{(props.slot.start + (props.slot.end ? ' – ' + props.slot.end : '')) as string}</p>
+				<p class="club-meta">
+					<Clock size={16} />
+					<span>{(props.slot.start + (props.slot.end ? ' – ' + props.slot.end : '')) as string}</span>
+				</p>
 				@if (props.slot.text) {
 					<p>{props.slot.text as string}</p>
 				}
-				@if (props.slot.location) {
-					<p>{props.slot.location as string}</p>
-				}
+				<p class="club-meta">
+					<Building2 size={16} />
+					<span>{(props.slot.location || '–') as string}</span>
+				</p>
 				@if (ageLabel(props.group)) {
 					<p>{ageLabel(props.group) as string}</p>
 				}

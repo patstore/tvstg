@@ -2,6 +2,7 @@ export * from './Image';
 export * from './ScrollWrapper';
 export * from './ContentFields';
 export * from './HeadContent';
+export * from './Loading';
 export * from './Label';
 export * from './Html';
 export * from './Button';

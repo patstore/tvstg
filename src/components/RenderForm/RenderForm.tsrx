@@ -2,6 +2,7 @@ import { useState } from 'octane';
 import { isPatStoreConfigured } from '@patstore/core';
 import { formFields, useForms } from '@provider';
 import type { FormFieldDef, SiteRecord } from '@types';
+import { Loading } from '@ui';
 import { submitContactForm } from './submitContactForm.ts';
 
 export function RenderForm(props: { title?: string }) @{
@@ -25,7 +26,7 @@ function FormData(props: { title?: string }) @{
 		const fields = formFields((form as SiteRecord & { form_fields?: unknown } | undefined)?.form_fields);
 		<ContactFields fields={fields.length > 0 ? fields : fallbackFields} />
 	} @pending {
-		<p class="club-status">Formular wird geladen…</p>
+		<Loading />
 	} @catch (_error) {
 		<ContactFields fields={fallbackFields} />
 	}

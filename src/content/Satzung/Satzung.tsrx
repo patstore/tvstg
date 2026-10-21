@@ -1,7 +1,7 @@
 import { isPatStoreConfigured } from '@patstore/core';
 import { Seo } from '@components';
 import { findWebpage, useWebpages } from '@provider';
-import { HeadContent, RenderContent } from '@ui';
+import { HeadContent, Loading, RenderContent } from '@ui';
 
 export function Satzung(props: { language: string }) @{
 	<>
@@ -22,7 +22,7 @@ function SatzungData() @{
 			<RenderContent path="/satzung" />
 		</div>
 	} @pending {
-		<p class="club-status">Satzung wird geladen…</p>
+		<Loading />
 	} @catch (_error) {
 		<p class="club-status">Satzung konnte nicht geladen werden.</p>
 	}

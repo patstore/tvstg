@@ -1,7 +1,7 @@
 import { isPatStoreConfigured } from '@patstore/core';
 import { Seo } from '@components';
 import { findWebpage, useWebpages } from '@provider';
-import { HeadContent, RenderContent } from '@ui';
+import { HeadContent, Loading, RenderContent } from '@ui';
 
 export function Jugendordnung(props: { language: string }) @{
 	<>
@@ -28,7 +28,7 @@ function JugendordnungData() @{
 			<RenderContent path="/jugendordnung" />
 		</div>
 	} @pending {
-		<p class="club-status">Jugendordnung wird geladen…</p>
+		<Loading />
 	} @catch (_error) {
 		<p class="club-status">Jugendordnung konnte nicht geladen werden.</p>
 	}

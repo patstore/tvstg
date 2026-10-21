@@ -1,7 +1,7 @@
 import { isPatStoreConfigured } from '@patstore/core';
 import { Seo } from '@components';
 import { downloadUrl, findWebpage, idList, useDownloads, useImages, usePersons, useWebpages } from '@provider';
-import { ContactPerson, HeadContent, RenderContent } from '@ui';
+import { ContactPerson, HeadContent, Loading, RenderContent } from '@ui';
 
 export function Praevention(props: { language: string }) @{
 	<>
@@ -48,7 +48,7 @@ function PraeventionData() @{
 			</div>
 		</div>
 	} @pending {
-		<p class="club-status">Prävention wird geladen…</p>
+		<Loading />
 	} @catch (_error) {
 		<p class="club-status">Prävention konnte nicht geladen werden.</p>
 	}

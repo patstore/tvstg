@@ -1,7 +1,7 @@
 import { Seo, RenderForm } from '@components';
 import { findWebpage, useWebpages } from '@provider';
 import { isPatStoreConfigured } from '@patstore/core';
-import { HeadContent, RenderContent } from '@ui';
+import { HeadContent, Loading, RenderContent } from '@ui';
 
 export function Kontakt(props: { language: string }) @{
 	<>
@@ -41,7 +41,7 @@ function KontaktData() @{
 			</div>
 		</div>
 	} @pending {
-		<p class="club-status">Kontaktseite wird geladen…</p>
+		<Loading />
 	} @catch (_error) {
 		<p class="club-status">Kontaktseite konnte nicht geladen werden.</p>
 	}

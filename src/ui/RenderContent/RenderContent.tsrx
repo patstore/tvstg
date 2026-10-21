@@ -10,6 +10,7 @@ import {
 } from '@provider';
 import type { ContentElement, SiteRecord } from '@types';
 import { Html } from '../Html/index.ts';
+import { Loading } from '../Loading/index.ts';
 
 function elementValue(element: ContentElement): unknown {
 	return element.value;
@@ -41,7 +42,7 @@ function RenderContentData(props: { path?: string; contentId?: string }) @{
 			}
 		</div>
 	} @pending {
-		<p class="club-status">Inhalt wird geladen…</p>
+		<Loading />
 	} @catch (_error) {
 		<p class="club-status">Inhalt konnte nicht geladen werden.</p>
 	}

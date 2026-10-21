@@ -12,7 +12,7 @@ import {
 	useLocations,
 } from '@provider';
 import type { SiteRecord } from '@types';
-import { HeadContent, SwitchButton } from '@ui';
+import { HeadContent, Loading, SwitchButton } from '@ui';
 
 export function Termine(props: { language: string }) @{
 	<>
@@ -87,7 +87,7 @@ function TermineData() @{
 			/>
 		</div>
 	} @pending {
-		<p class="club-status">Termine werden geladen…</p>
+		<Loading />
 	} @catch (_error) {
 		<p class="club-status">Termine konnten nicht geladen werden.</p>
 	}

@@ -10,7 +10,7 @@ import {
 	trainingSlots,
 	useCategories,
 	useGroups,
-	useLocations,
+	useLocationsFor,
 } from '@provider';
 import type { SiteRecord, Trainingszeit } from '@types';
 
@@ -23,7 +23,7 @@ export function useTrainingTimes(options: {
 }): { trainingszeiten: Trainingszeit[]; ages: number[]; groups: SiteRecord[]; locations: SiteRecord[] } {
 	const categories = useCategories();
 	const groups = useGroups();
-	const locations = useLocations();
+	const locations = useLocationsFor(locationIds(groups));
 
 	const trainingszeiten = useMemo(() => {
 		const slots: Trainingszeit[] = [];
@@ -43,7 +43,8 @@ export function useTrainingTimes(options: {
 			}
 			for (const time of trainingSlots(group.times)) {
 				const locationId = time.place?.location;
-				const location = locations.find((item) => item.objectId === locationId)?.title || '';
+				const location =
+					locations.find((item) => item.objectId === locationId)?.title || time.place?.address || '';
 				slots.push({
 					...time,
 					group_id: group.objectId,
@@ -97,4 +98,16 @@ export function useTrainingTimes(options: {
 		groups,
 		locations,
 	};
+}
+
+function locationIds(groups: SiteRecord[]): string[] {
+	const ids: string[] = [];
+	for (const group of groups) {
+		for (const time of trainingSlots(group.times)) {
+			if (time.place?.location) {
+				ids.push(time.place.location);
+			}
+		}
+	}
+	return ids;
 }

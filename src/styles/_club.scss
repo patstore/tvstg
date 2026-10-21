@@ -265,6 +265,41 @@ a {
 	padding: 2rem 0;
 }
 
+.club-loading {
+	position: fixed;
+	top: 100px;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	z-index: 15;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: 1.5rem;
+	background: #fff;
+}
+
+.club-loading img {
+	width: 180px;
+	height: auto;
+}
+
+.club-loading__spinner {
+	width: 44px;
+	height: 44px;
+	border: 3px solid #f1f1f2;
+	border-top-color: #cc0605;
+	border-radius: 50%;
+	animation: club-spin 0.8s linear infinite;
+}
+
+@keyframes club-spin {
+	to {
+		transform: rotate(360deg);
+	}
+}
+
 .club-header {
 	position: sticky;
 	top: 0;
@@ -582,6 +617,19 @@ a {
 	display: flex;
 	flex-direction: column;
 	gap: 0.35rem;
+}
+
+.club-meta {
+	display: flex;
+	align-items: flex-start;
+	gap: 0.35rem;
+	margin: 0;
+	font-weight: 600;
+}
+
+.club-meta svg {
+	flex: 0 0 auto;
+	margin-top: 0.15rem;
 }
 
 dialog.club-slide {

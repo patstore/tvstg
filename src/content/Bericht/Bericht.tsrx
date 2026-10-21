@@ -11,7 +11,7 @@ import {
 	useCategories,
 	useImages,
 } from '@provider';
-import { Html, Label, SportBanner } from '@ui';
+import { Html, Label, Loading, SportBanner } from '@ui';
 
 export function Bericht(props: { slug: string; language: string }) @{
 	@if (!props.slug || !isPatStoreConfigured()) {
@@ -64,7 +64,7 @@ function BerichtData(props: { slug: string; language: string }) @{
 			</div>
 		}
 	} @pending {
-		<p class="club-status">Beitrag wird geladen…</p>
+		<Loading />
 	} @catch (_error) {
 		<p class="club-status">Beitrag konnte nicht geladen werden.</p>
 	}

@@ -1,7 +1,7 @@
 import { isPatStoreConfigured } from '@patstore/core';
 import { Seo } from '@components';
 import { downloadUrl, idList, useCategories, useDownloads } from '@provider';
-import { HeadContent } from '@ui';
+import { HeadContent, Loading } from '@ui';
 
 export function Downloads(props: { language: string }) @{
 	<>
@@ -47,7 +47,7 @@ function DownloadsData() @{
 			}
 		</div>
 	} @pending {
-		<p class="club-status">Downloads werden geladen…</p>
+		<Loading />
 	} @catch (_error) {
 		<p class="club-status">Downloads konnten nicht geladen werden.</p>
 	}

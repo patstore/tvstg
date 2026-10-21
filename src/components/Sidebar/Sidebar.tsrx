@@ -12,6 +12,7 @@ import {
 	useLocations,
 } from '@provider';
 import type { SiteRecord } from '@types';
+import { Loading } from '@ui';
 import { SiteLink } from '../SiteLink/index.ts';
 import { Html } from '../../ui/Html/index.ts';
 import { Label } from '../../ui/Label/index.ts';
@@ -85,7 +86,7 @@ function NewsList(props: { category?: string; displayAll?: boolean }) @{
 			}
 		</div>
 	} @pending {
-		<p class="club-status">Aktuelles wird geladen…</p>
+		<Loading />
 	} @catch (_error) {
 		<p class="club-status">Aktuelles konnte nicht geladen werden.</p>
 	}
@@ -117,7 +118,7 @@ function CalendarList(props: { category?: string; displayAll?: boolean }) @{
 			<SiteLink href="/termine" class="club-button">Zu allen Terminen</SiteLink>
 		</div>
 	} @pending {
-		<p class="club-status">Termine werden geladen…</p>
+		<Loading />
 	} @catch (_error) {
 		<p class="club-status">Termine konnten nicht geladen werden.</p>
 	}
@@ -204,7 +205,7 @@ function TrainingList(props: { category: string }) @{
 			}
 		</div>
 	} @pending {
-		<p class="club-status">Trainingszeiten werden geladen…</p>
+		<Loading />
 	} @catch (_error) {
 		<p class="club-status">Trainingszeiten konnten nicht geladen werden.</p>
 	}

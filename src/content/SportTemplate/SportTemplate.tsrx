@@ -14,7 +14,7 @@ import {
 	useImages,
 } from '@provider';
 import type { SiteRecord } from '@types';
-import { BlogElement, GroupPanel, HeadContent } from '@ui';
+import { BlogElement, GroupPanel, HeadContent, Loading } from '@ui';
 
 export function SportTemplate(props: { department: string; sport: string; language: string }) @{
 	<>
@@ -80,7 +80,7 @@ function SportData(props: { department: string; sport: string; language: string 
 			</div>
 		</div>
 	} @pending {
-		<p class="club-status">Sportart wird geladen…</p>
+		<Loading />
 	} @catch (_error) {
 		<p class="club-status">Sportart konnte nicht geladen werden.</p>
 	}

@@ -2,7 +2,7 @@ import { useState } from 'octane';
 import { isPatStoreConfigured } from '@patstore/core';
 import { Seo } from '@components';
 import { idList, publishedArticles, useArticles, useCategories, useImages } from '@provider';
-import { BlogElement, HeadContent, SwitchButton } from '@ui';
+import { BlogElement, HeadContent, Loading, SwitchButton } from '@ui';
 
 const PAGE_SIZE = 18;
 
@@ -60,7 +60,7 @@ function BerichteData() @{
 			<Pager page={page} pageCount={pageCount} onPage={setPage} />
 		</div>
 	} @pending {
-		<p class="club-status">Berichte werden geladen…</p>
+		<Loading />
 	} @catch (_error) {
 		<p class="club-status">Berichte konnten nicht geladen werden.</p>
 	}

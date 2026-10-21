@@ -1,7 +1,7 @@
 import { isPatStoreConfigured } from '@patstore/core';
 import { Seo } from '@components';
 import { downloadUrl, findWebpage, useDownloads, useWebpages } from '@provider';
-import { HeadContent, RenderContent } from '@ui';
+import { HeadContent, Loading, RenderContent } from '@ui';
 
 export function Mitgliedschaft(props: { language: string }) @{
 	<>
@@ -53,7 +53,7 @@ function MitgliedschaftData() @{
 			</div>
 		</div>
 	} @pending {
-		<p class="club-status">Mitgliedschaft wird geladen…</p>
+		<Loading />
 	} @catch (_error) {
 		<p class="club-status">Mitgliedschaft konnte nicht geladen werden.</p>
 	}

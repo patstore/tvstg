@@ -16,23 +16,27 @@ export function useImages(): SiteRecord[] {
 }
 
 /**
- * Project image list, plus any requested image ids that live outside that list.
- * Group photos are often stored on another project, so a project-scoped find misses them.
+ * Records from a project list, plus any requested ids stored on another project.
+ * A project-scoped find does not return those rows.
  */
-export function useImagesFor(ids: string[]): SiteRecord[] {
-	const images = useImages();
-	const known = new Set(images.map((image) => image.objectId));
+function useLinkedRecords(className: string, ids: string[], records: SiteRecord[]): SiteRecord[] {
+	const known = new Set(records.map((record) => record.objectId));
 	const missingKey = [...new Set(ids.filter((id) => id && !known.has(id)))].sort().join('|');
 	const extra = useMemo(() => {
 		const missing = missingKey ? missingKey.split('|') : [];
 		return Promise.all(
 			missing.map((id) =>
-				fetchPatStoreObject<SiteRecord>('Image', id, { source: 'dynamic' }).catch(() => null),
+				fetchPatStoreObject<SiteRecord>(className, id, { source: 'dynamic' }).catch(() => null),
 			),
 		);
-	}, [missingKey]);
-	const fetched = use(extra).filter((image): image is SiteRecord => image != null);
-	return [...images, ...fetched];
+	}, [className, missingKey]);
+	const fetched = use(extra).filter((record): record is SiteRecord => record != null);
+	return [...records, ...fetched];
+}
+
+/** Project image list, plus photos referenced by id from outside that list. */
+export function useImagesFor(ids: string[]): SiteRecord[] {
+	return useLinkedRecords('Image', ids, useImages());
 }
 
 export function useDownloads(): SiteRecord[] {
@@ -59,6 +63,11 @@ export function useLocations(): SiteRecord[] {
 	return usePatStoreCollection<SiteRecord>('Location');
 }
 
+/** Project locations, plus halls referenced by training times outside that list. */
+export function useLocationsFor(ids: string[]): SiteRecord[] {
+	return useLinkedRecords('Location', ids, useLocations());
+}
+
 export function useEntries(): SiteRecord[] {
 	return usePatStoreCollection<SiteRecord>('Entry');
 }
@@ -69,19 +78,7 @@ export function usePersons(): SiteRecord[] {
 
 /** Person rows for the given ids, including trainers stored outside this project. */
 export function usePersonsFor(ids: string[]): SiteRecord[] {
-	const people = usePersons();
-	const known = new Set(people.map((person) => person.objectId));
-	const missingKey = [...new Set(ids.filter((id) => id && !known.has(id)))].sort().join('|');
-	const extra = useMemo(() => {
-		const missing = missingKey ? missingKey.split('|') : [];
-		return Promise.all(
-			missing.map((id) =>
-				fetchPatStoreObject<SiteRecord>('Person', id, { source: 'dynamic' }).catch(() => null),
-			),
-		);
-	}, [missingKey]);
-	const fetched = use(extra).filter((person): person is SiteRecord => person != null);
-	return [...people, ...fetched];
+	return useLinkedRecords('Person', ids, usePersons());
 }
 
 export function useForms(): SiteRecord[] {

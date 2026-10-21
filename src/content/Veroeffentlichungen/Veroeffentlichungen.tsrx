@@ -1,7 +1,7 @@
 import { isPatStoreConfigured } from '@patstore/core';
 import { Seo } from '@components';
 import { downloadUrl, idList, mediaUrl, useCategories, useDownloads, useImages } from '@provider';
-import { HeadContent } from '@ui';
+import { HeadContent, Loading } from '@ui';
 
 export function Veroeffentlichungen(props: { language: string }) @{
 	<>
@@ -45,7 +45,7 @@ function Publications() @{
 			</div>
 		</div>
 	} @pending {
-		<p class="club-status">Veröffentlichungen werden geladen…</p>
+		<Loading />
 	} @catch (_error) {
 		<p class="club-status">Veröffentlichungen konnten nicht geladen werden.</p>
 	}

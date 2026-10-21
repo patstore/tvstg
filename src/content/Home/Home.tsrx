@@ -1,7 +1,7 @@
 import { isPatStoreConfigured } from '@patstore/core';
 import { Seo, Sidebar } from '@components';
 import { publishedArticles, useArticles, useCategories, useImages } from '@provider';
-import { BlogElement, Sponsors, SportBanner } from '@ui';
+import { BlogElement, Loading, Sponsors, SportBanner } from '@ui';
 import shopTeaser from '../../assets/shop-teaser.jpg';
 
 export function Home(props: { language: string }) @{
@@ -54,7 +54,7 @@ function HomeContent() @{
 			</div>
 		</div>
 	} @pending {
-		<p class="club-status">Startseite wird geladen…</p>
+		<Loading />
 	} @catch (_error) {
 		<p class="club-status">Startseite konnte nicht geladen werden.</p>
 	}
